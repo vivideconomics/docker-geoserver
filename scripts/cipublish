@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -x
+
+IMAGE_TAG_NAME=geoserver
+VERSION=`cat VERSION.txt | tr -d '\n'` 
+FRONTEND_ECR_ENDPOINT=074145640974.dkr.ecr.eu-west-2.amazonaws.com
+
+
+aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken' \
+               | base64 -D \
+               | cut -d':' -f2 \
+               | docker login -u AWS "https://$FRONTEND_ECR_ENDPOINT" --password-stdin
+
+
+local_tag=$IMAGE_TAG_NAME:$VERSION
+remote_tag=$FRONTEND_ECR_ENDPOINT/$local_tag
+
+docker tag "$local_tag" "$remote_tag"
+docker push "$remote_tag"
+

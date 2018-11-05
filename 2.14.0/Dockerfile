@@ -1,6 +1,6 @@
 FROM tomcat:8-jre8
 
-MAINTAINER Oscar Fonts <oscar.fonts@geomati.co>
+MAINTAINER Mark Westcott <mark.westcott@vivideconomics.com>
 
 ENV GEOSERVER_VERSION 2.14.0
 ENV GEOSERVER_DATA_DIR /var/local/geoserver
@@ -58,6 +58,12 @@ RUN sed -i '\:</web-app>:i\
     <filter-name>CorsFilter</filter-name>\n\
     <url-pattern>/*</url-pattern>\n\
 </filter-mapping>' ${GEOSERVER_INSTALL_DIR}/WEB-INF/web.xml
+
+# Pyramid plugin
+RUN cd ${GEOSERVER_INSTALL_DIR}/WEB-INF/lib \
+&& wget http://sourceforge.net/projects/geoserver/files/GeoServer/2.14.0/extensions/geoserver-${GEOSERVER_VERSION}-pyramid-plugin.zip \
+&& unzip geoserver-${GEOSERVER_VERSION}-pyramid-plugin.zip
+
 
 # Tomcat environment
 ENV CATALINA_OPTS "-server -Djava.awt.headless=true \
