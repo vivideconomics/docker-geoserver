@@ -14,8 +14,14 @@ aws ecr get-authorization-token --output text --query 'authorizationData[].autho
 
 
 local_tag=$IMAGE_TAG_NAME:$VERSION
-remote_tag=$FRONTEND_ECR_ENDPOINT/$local_tag
+remote_tag_1=$FRONTEND_ECR_ENDPOINT/$local_tag
 
-docker tag "$local_tag" "$remote_tag"
-docker push "$remote_tag"
+
+docker tag "$local_tag" "$remote_tag_1"
+docker push "$remote_tag_1"
+
+remote_tag_2=$FRONTEND_ECR_ENDPOINT/$IMAGE_TAG_NAME:latest
+docker tag "$local_tag" "$remote_tag_2"
+
+docker push "$remote_tag_2"
 
