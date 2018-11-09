@@ -5,6 +5,8 @@ MAINTAINER Mark Westcott <mark.westcott@vivideconomics.com>
 ENV GEOSERVER_VERSION 2.14.0
 ENV GEOSERVER_DATA_DIR /var/local/geoserver
 ENV GEOSERVER_INSTALL_DIR /usr/local/geoserver
+ENV HEAP_SIZE 1560m
+ENV INITIAL_HEAP_SIZE 768m
 
 # Uncomment to use APT cache (requires apt-cacher-ng on host)
 #RUN echo "Acquire::http { Proxy \"http://`/sbin/ip route|awk '/default/ { print $3 }'`:3142\"; };" > /etc/apt/apt.conf.d/71-apt-cacher-ng
@@ -67,7 +69,7 @@ RUN cd ${GEOSERVER_INSTALL_DIR}/WEB-INF/lib \
 
 # Tomcat environment
 ENV CATALINA_OPTS "-server -Djava.awt.headless=true \
-	-Xms768m -Xmx1560m -XX:+UseConcMarkSweepGC -XX:NewSize=48m \
+	-Xms${INITIAL_HEAP_SIZE} -Xmx${MAXIMUM_HEAP_SIZE} -XX:+UseConcMarkSweepGC -XX:NewSize=48m \
 	-DGEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR}"
 
 ADD start.sh /usr/local/bin/start.sh
