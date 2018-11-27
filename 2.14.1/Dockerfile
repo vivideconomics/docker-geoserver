@@ -2,7 +2,7 @@ FROM tomcat:8-jre8
 
 MAINTAINER Mark Westcott <mark.westcott@vivideconomics.com>
 
-ENV GEOSERVER_VERSION 2.14.0
+ENV GEOSERVER_VERSION 2.14.1
 ENV GEOSERVER_DATA_DIR /var/local/geoserver
 ENV GEOSERVER_INSTALL_DIR /usr/local/geoserver
 # Uncomment to use APT cache (requires apt-cacher-ng on host)
@@ -14,19 +14,6 @@ RUN set -x \
 	&& apt-get update \
 	&& apt-get install -yq ttf-mscorefonts-installer \
 	&& rm -rf /var/lib/apt/lists/*
-
-# Native JAI & ImageIO
-RUN cd /usr/lib/jvm/java-8-openjdk-amd64 \
-	&& wget http://download.java.net/media/jai/builds/release/1_1_3/jai-1_1_3-lib-linux-amd64-jdk.bin \
-	&& tail -n +139 jai-1_1_3-lib-linux-amd64-jdk.bin > INSTALL-jai \
-	&& chmod u+x INSTALL-jai \
-	&& ./INSTALL-jai \
-	&& rm jai-1_1_3-lib-linux-amd64-jdk.bin INSTALL-jai *.txt \
-	&& wget http://download.java.net/media/jai-imageio/builds/release/1.1/jai_imageio-1_1-lib-linux-amd64-jdk.bin \
-	&& tail -n +215 jai_imageio-1_1-lib-linux-amd64-jdk.bin > INSTALL-jai_imageio \
-	&& chmod u+x INSTALL-jai_imageio \
-	&& ./INSTALL-jai_imageio \
-	&& rm jai_imageio-1_1-lib-linux-amd64-jdk.bin INSTALL-jai_imageio *.txt
 
 # GeoServer
 ADD conf/geoserver.xml /usr/local/tomcat/conf/Catalina/localhost/geoserver.xml
@@ -60,7 +47,7 @@ RUN sed -i '\:</web-app>:i\
 
 # Pyramid plugin
 RUN cd ${GEOSERVER_INSTALL_DIR}/WEB-INF/lib \
-&& wget http://sourceforge.net/projects/geoserver/files/GeoServer/2.14.0/extensions/geoserver-${GEOSERVER_VERSION}-pyramid-plugin.zip \
+&& wget http://sourceforge.net/projects/geoserver/files/GeoServer/${GEOSERVER_VERSION}/extensions/geoserver-${GEOSERVER_VERSION}-pyramid-plugin.zip \
 && unzip geoserver-${GEOSERVER_VERSION}-pyramid-plugin.zip
 
 # Tomcat environment
